@@ -1,6 +1,8 @@
 from tkinter import *
 import os
 from tkinter.ttk import *
+from bd import crear_conexion, actualizar_tabla
+import sqlite3
 ventana = Tk()
 ventana.title("Cuentas y contraseñas")
 #img = PhotoImage(file='candado.ico')
@@ -10,14 +12,26 @@ ventana.title("Cuentas y contraseñas")
 #ZONA DE FUNCIONES
 arreglo = []
 def guardar():
-    arreglo.append(Nombre.get())
-    arreglo.append(Pagina.get())
-    arreglo.append(Correo.get())
-    arreglo.append(Contraseña.get())
+    cuentas = [(Nombre.get(), Pagina.get(), Correo.get(), Contraseña.get())]
+ #   instancia_nueva = ("INSERT INTO cuenta (Nombre, Pagina, Correo, Contraseña) VALUES(?, ?, ?, ?)", cuentas);
+    
+    conn = crear_conexion("database")
+    c = conn.cursor()
+    c.executemany("INSERT INTO cuenta (Nombre, Pagina, Correo, Contraseña) VALUES(?, ?, ?, ?)", cuentas)
+    conn.commit()
+ #   actualizar_tabla(conn, instancia_nueva)
+#    arreglo.append(Nombre.get())
+#    arreglo.append(Pagina.get())
+#    arreglo.append(Correo.get())
+#    arreglo.append(Contraseña.get())
     
 def mostrar():
-    textoGigante.delete(index1=0)
-    textoGigante.insert(INSERT,arreglo)
+    conn = crear_conexion("database")
+    c = conn.cursor()
+    c.execute("SELECT * FROM cuenta")
+    variasCuentas = c.fetchall()
+    for cuenta in variasCuentas:
+        textoGigante.insert(INSERT,(cuenta,"\n"))
 #ZONA DE LABELS
 
 labelNombre = Label(ventana,text= "Nombre--")

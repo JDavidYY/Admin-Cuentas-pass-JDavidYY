@@ -9,7 +9,7 @@ def crear_conexion(dbFile):
     except Error as e:
         print(e)
     return conn
-
+#----------Creamos la función para crear tablas-------------
 def crear_tabla(conn, tabla):
     try:
         c= conn.cursor()
@@ -17,10 +17,21 @@ def crear_tabla(conn, tabla):
     except Error as e:
         print(e)
 
+#----------Creamos la función para insertar datos en las tablas-----
+
+def actualizar_tabla(conn,tabla):
+    try:
+        c = conn.cursor()
+        c.execute(tabla)
+        conn.commit()
+    except Error as e:
+        print(e)
+    return c
+
+#------------Creamos la función para arrancar la base de datos inicial
 def db():
  
     sql_tabla_cuenta = """ CREATE TABLE IF NOT EXISTS cuenta (
-                                        id integer PRIMARY KEY,
                                         nombre text NOT NULL,
                                         pagina text NOT NULL,
                                         correo text NOT NULL,
